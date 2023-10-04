@@ -56,6 +56,10 @@ const TextContainer = styled.div`
   align-items: center;
   justify-content: space-around;
   cursor: pointer;
+  transition: all 1s;
+  &:hover {
+    scale: 1.2;
+  }
   ${mobile({})}
 `;
 const Text = styled.p`
@@ -84,9 +88,14 @@ const Search = styled.input`
   }
   ${mobile({ padding: "0px", width: "20px" })}
 `;
-const SearchContainer = styled.div`
+const SearchContainer = styled.form`
   display: flex;
   align-items: center;
+  background-color: white;
+`;
+
+const SerachBtnContainer = styled.button`
+  border: none;
   background-color: white;
 `;
 
@@ -97,6 +106,11 @@ const Navbar = () => {
   const user = useSelector((state) => state.user.currentUser);
 
   // const userName =  user.username.charAt(0).toUpperCase();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Clicked");
+  };
 
   return (
     <Container>
@@ -109,14 +123,17 @@ const Navbar = () => {
                   <HomeOutlinedIcon /> <Text>Home</Text>
                 </TextContainer>
               </Link>
-              <Link to="/myaccount">
-                <AccountCircleOutlinedIcon
-                  style={{
-                    cursor: "pointer",
-                    color: "cadetblue",
-                    fontSize: 30,
-                  }}
-                />
+              <Link to="/myaccount" style={{ textDecoration: "none" }}>
+                <TextContainer>
+                  <AccountCircleOutlinedIcon
+                    style={{
+                      cursor: "pointer",
+                      color: "cadetblue",
+                      fontSize: 30,
+                    }}
+                  />
+                  <Text>Profile</Text>
+                </TextContainer>
               </Link>
             </>
           ) : (
@@ -143,7 +160,7 @@ const Navbar = () => {
           <Heading>DholakPur</Heading>
         </Middle>
         <Right>
-          <SearchContainer>
+          <SearchContainer onSubmit={(e) => handleSubmit(e)}>
             <Search
               type="text"
               value={input}
@@ -152,9 +169,19 @@ const Navbar = () => {
                 setInput(event.target.value);
               }}
             ></Search>
-            <SearchOutlinedIcon
-              style={{ color: "gray", fontSize: 25, cursor: "pointer" }}
-            />
+            <SerachBtnContainer type="submit">
+              <SearchOutlinedIcon
+                sx={{
+                  ":active": { transform: "rotate(-360deg)" },
+                }}
+                style={{
+                  color: "gray",
+                  fontSize: 25,
+                  cursor: "pointer",
+                  transition: "transform 1s",
+                }}
+              />
+            </SerachBtnContainer>
           </SearchContainer>
 
           <Link to="/cart">

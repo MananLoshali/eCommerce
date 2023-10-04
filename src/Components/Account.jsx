@@ -2,6 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
+
+const Container = styled.div`
+  overflow-x: hidden;
+`;
 
 const Box = styled.div`
   width: 100vw;
@@ -21,10 +26,10 @@ const ImageContainer = styled.div`
   align-items: center;
 `;
 
-const Image = styled.div`
+const Image = styled.img`
   border: 2px solid greenyellow;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,17 +80,19 @@ const Account = () => {
   const user = useSelector((state) => state.user.currentUser);
   console.log(user._id);
   const userName = user.username.charAt(0).toUpperCase();
+  const userImage = user.image;
   const handleClick = () => {
     localStorage.removeItem("persist:root");
     window.location.reload();
   };
   return (
-    <>
+    <Container>
+      <Navbar />
       <Box>
         <Text>YOUR PROFILE</Text>
 
         <ImageContainer>
-          <Image>{userName}</Image>
+          <Image src={userImage} />
         </ImageContainer>
         <InfoContainer>
           <Info>USER: {user.username}</Info>
@@ -116,7 +123,7 @@ const Account = () => {
           <Button onClick={handleClick}>Logout</Button>
         </InfoContainer>
       </Box>
-    </>
+    </Container>
   );
 };
 

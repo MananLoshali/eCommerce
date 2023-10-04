@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Navbar from "../Components/Navbar";
 import { userRequest } from "../requestMethods";
@@ -44,17 +44,15 @@ const Text = styled.div`
 `;
 const Orders = () => {
   const location = useLocation();
-  const ref = useRef();
-  //const [orders, setOrders] = useState([]);
+  const [orders, setOrders] = useState();
   const id = location.pathname.split("/")[2];
   console.log(id);
   useEffect(() => {
     const getOrders = async () => {
       try {
         const res = await userRequest.get(`/orders/${id}`);
-        //setOrders(res.data);
-        ref.current = res.data;
-        console.log(ref.current);
+        setOrders(res);
+        console.log(orders);
       } catch (error) {
         console.log(error);
       }
@@ -68,11 +66,11 @@ const Orders = () => {
       <Box>
         <Heading>Your Orders</Heading>
         <OrdersContainer>
-          {ref.current.map((order) => (
+          {/* {ref.current.map((order) => (
             <Order>
               <Text>{order._id}</Text>
             </Order>
-          ))}
+          ))} */}
         </OrdersContainer>
       </Box>
     </>

@@ -11,6 +11,7 @@ import Products from "./Components/Products";
 import Checkouts from "./Pages/Checkouts/Checkouts";
 import Account from "./Components/Account";
 import Orders from "./Pages/Orders";
+import TEst from "./Pages/TEst";
 
 function App() {
   const user = useSelector((state) => state.user.currentUser);
@@ -50,6 +51,7 @@ function App() {
       {/* <Route path="/myaccount" element={<Account />} /> */}
       <Route path="/myorders/:id" element={<Orders />} />
       <Route path="*" element={<Nomatch />} />
+      {/* <Route path="/vid" element={<TEst />} /> */}
     </Routes>
   );
 }

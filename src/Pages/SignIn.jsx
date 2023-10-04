@@ -3,6 +3,8 @@ import styled from "styled-components";
 import { login } from "../redux/apiCalls";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import backVideo from "../assests/backVid.webm";
+import { mobile } from "../responsive";
 
 const Box = styled.div`
   width: 100vw;
@@ -10,40 +12,56 @@ const Box = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
+  overflow: hidden;
+  background-color: #aa83aa;
+  /* background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100% 100%; */
+  position: relative;
 `;
 
 const Heading = styled.h1`
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   font-weight: 400;
 `;
+
 const Form = styled.form`
   width: 40%;
-  height: 40%;
+  height: 48%;
   border: 0.5px solid gray;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 15px;
   text-align: center;
   align-items: center;
   border-radius: 10px;
+  background-color: #d2cbcb;
+  opacity: 0.8;
+  ${mobile({
+    width: "80%",
+    height: "60%",
+  })}
 `;
+
 const Input = styled.input`
   width: 80%;
   height: 15%;
   padding: 2px 4px;
+  border: none;
+  border-radius: 10px;
   &:focus {
     outline: none;
   }
 `;
+
 const Error = styled.span`
   color: red;
 `;
 
 const Button = styled.button`
-  width: 10%;
-  height: 17%;
-  font-size: 1rem;
+  width: 14%;
+  height: 15%;
+  font-size: 1.1rem;
   font-weight: bolder;
   background-color: #97e3ec;
   border: 1px solid blue;
@@ -51,6 +69,7 @@ const Button = styled.button`
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  border-radius: 10%;
   &:disabled {
     color: green;
     cursor: not-allowed;
@@ -58,8 +77,21 @@ const Button = styled.button`
 `;
 const Para = styled.p`
   font-size: 1rem;
-  color: orange;
+  color: #27b827;
 `;
+
+const Video = styled.video`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
+  width: 50%;
+  object-fit: cover;
+  ${mobile({
+    width: "100%",
+  })}
+`;
+
 const Signin = () => {
   const [errors, setErrors] = useState(false);
   const [username, setUsername] = useState("");
@@ -81,6 +113,9 @@ const Signin = () => {
   console.log(error);
   return (
     <Box>
+      <Video playsInline autoPlay muted loop>
+        <source src={backVideo} />
+      </Video>
       <Form>
         <Heading>SignIn</Heading>
         <Input
@@ -109,10 +144,10 @@ const Signin = () => {
 
         {errors && <Error>All fields are necessary</Error>}
         {error && <Error> Something went wrong</Error>}
+        <Para>
+          New user ?? <Link to="/signup">Sign Up</Link>
+        </Para>
       </Form>
-      <Para>
-        New user ?? <Link to="/signup">Sign Up</Link>
-      </Para>
     </Box>
   );
 };

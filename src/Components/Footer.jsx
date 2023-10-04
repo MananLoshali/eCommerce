@@ -41,6 +41,7 @@ const SocialIcon = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 20px;
+  cursor: pointer;
 `;
 
 const Center = styled.div`
@@ -96,12 +97,12 @@ const Footer = () => {
     },
     {
       id: 3,
-      text: "Man Fashion",
+      text: "Men Fashion",
       link: "/productlist/men",
     },
     {
       id: 4,
-      text: "Woman Fashion",
+      text: "Women Fashion",
       link: "/productlist/women",
     },
     {
@@ -180,13 +181,13 @@ const Footer = () => {
           Sakuliya , Motahaldu Uttarakhand 263139
         </ContactItem>
         <ContactItem>
-          <PhoneIcon style={{ marginRight: "10px" }} /> +5946 232393
+          <PhoneIcon style={{ marginRight: "10px" }} /> +05946 232393
         </ContactItem>
         <ContactItem>
           <MailOutlineIcon style={{ marginRight: "10px" }} />{" "}
           mananloshali@gmail.com
         </ContactItem>
-        <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" />
+        <Payment src="https://i.ibb.co/Qfvn4z6/payment.png" alt="Payment" />
       </Right>
     </Container>
   );

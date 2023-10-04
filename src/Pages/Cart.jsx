@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { clearCart } from "../redux/cartRedux";
 import { userRequest } from "../requestMethods";
+import Newsletter from "../Components/Newsletter";
 
 const Container = styled.div``;
 
@@ -283,6 +284,7 @@ const Cart = () => {
           </Summary>
         </Bottom>
       </Wrapper>
+      <Newsletter />
       <Footer />
     </Container>
   );
