@@ -11,27 +11,29 @@ import Products from "./Components/Products";
 import Checkouts from "./Pages/Checkouts/Checkouts";
 import Account from "./Components/Account";
 import Orders from "./Pages/Orders";
-import TEst from "./Pages/TEst";
+// import TEst from "./Pages/TEst";
+// import { userRequest } from "../requestMethods";
 
 function App() {
-  const user = useSelector((state) => state.user.currentUser);
+  const currentUser = useSelector((state) => state.user.currentUser);
   const newUser = useSelector((state) => state.user.newUser);
-  console.log(user);
+  console.log(currentUser);
+  console.log(newUser);
 
   return (
     <Routes>
       <Route path="/" element={<Home />} />
       {newUser ? (
-        <Route path="/signup" element={<Navigate to="/" />} />
+        <Route path="/signup" element={<Navigate to="/signin" />} />
       ) : (
         <Route path="/signup" element={<SignUp />} />
       )}
-      {user ? (
+      {currentUser ? (
         <Route path="/signin" element={<Navigate to="/" />} />
       ) : (
         <Route path="/signin" element={<SignIn />} />
       )}
-      {user ? (
+      {currentUser ? (
         <Route path="/signup" element={<Navigate to="/" />} />
       ) : (
         <Route path="/signup" element={<SignUp />} />
@@ -42,7 +44,7 @@ function App() {
       <Route path="/products" element={<Products />} />
       <Route path="/checkout" element={<Checkouts />} />
 
-      {user ? (
+      {currentUser ? (
         <Route path="/myaccount" element={<Account />} />
       ) : (
         <Route path="/myaccount" element={<Navigate to="/" />} />

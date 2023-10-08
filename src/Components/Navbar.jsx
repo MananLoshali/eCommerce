@@ -10,6 +10,9 @@ import { Badge } from "@mui/material";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { mobile } from "../responsive";
+import axios from "axios";
+import { publicRequest } from "../requestMethods";
+import Product from "./Product";
 
 const Container = styled.div`
   height: 40px;
@@ -101,15 +104,20 @@ const SerachBtnContainer = styled.button`
 
 const Navbar = () => {
   const [input, setInput] = useState("");
+  const [arr, setArr] = useState([]);
 
   const quantity = useSelector((state) => state.cart.quantity);
   const user = useSelector((state) => state.user.currentUser);
 
   // const userName =  user.username.charAt(0).toUpperCase();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Clicked");
+    console.log(input);
+    const res = await publicRequest.get(`/products/?category=${input}`);
+    const data = res.data;
+    console.log(data);
+    setArr(data.map((items) => <Product item={items} />));
   };
 
   return (

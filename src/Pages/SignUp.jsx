@@ -36,6 +36,9 @@ const Form = styled.form`
   border-radius: 10px;
   background-color: #d2cbcb;
   opacity: 0.8;
+  ${mobile({
+    width: "90%",
+  })}
 `;
 
 const Input = styled.input`

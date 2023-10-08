@@ -9,9 +9,10 @@ import Newsletter from "../Components/Newsletter";
 import Footer from "../Components/Footer";
 import { Navigate, useLocation } from "react-router-dom";
 
-import { userRequest } from "../requestMethods";
+import { publicRequest, userRequest } from "../requestMethods";
 import { addProduct } from "../redux/cartRedux";
 import { useDispatch } from "react-redux";
+import Product from "../Components/Product";
 
 const Box = styled.div`
   box-sizing: border-box;
@@ -122,6 +123,8 @@ const SingleProduct = () => {
   const id = location.pathname.split("/")[2];
   const [goto, setGoto] = useState(false);
   const [product, setProduct] = useState({});
+  const [recProduct, setRecProduct] = useState([]);
+
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("yellow");
   const [size, setSize] = useState("M");
@@ -141,6 +144,15 @@ const SingleProduct = () => {
     getProduct();
   }, [id]);
 
+  const getRecPro = async (arr) => {
+    const res = await publicRequest.get(`/products/?category=${arr[1]}`);
+    setRecProduct(res.data);
+    console.log(res.data);
+  };
+
+  ///for showing recommanded products
+  // getRecPro();
+
   const handleQuantity = (type) => {
     if (type === "inc") {
       setQuantity(quantity + 1);
@@ -157,6 +169,11 @@ const SingleProduct = () => {
   if (goto) {
     return <Navigate to="/signin" />;
   }
+  const show = () => {
+    let vara = [...product.categories];
+    console.log(vara);
+    getRecPro(vara);
+  };
   return (
     <Box>
       <Announcement />
@@ -199,6 +216,10 @@ const SingleProduct = () => {
           </Filter1>
         </Right>
       </Wrapper>
+      {recProduct?.map((items) => (
+        <Product item={items} />
+      ))}
+      <button onClick={show}>SHOW</button>
       <Newsletter />
       <Footer />
     </Box>
