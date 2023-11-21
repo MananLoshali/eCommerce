@@ -11,8 +11,9 @@ import Products from "./Components/Products";
 import Checkouts from "./Pages/Checkouts/Checkouts";
 import Account from "./Components/Account";
 import Orders from "./Pages/Orders";
-// import TEst from "./Pages/TEst";
-// import { userRequest } from "../requestMethods";
+import ChangePassword from "./Pages/ChangePassword";
+import SearchProduct from "./Pages/SearchProduct";
+import WishList from "./Pages/WishList";
 
 function App() {
   const currentUser = useSelector((state) => state.user.currentUser);
@@ -43,7 +44,7 @@ function App() {
       <Route path="/singleproduct/:id" element={<SingleProduct />} />
       <Route path="/products" element={<Products />} />
       <Route path="/checkout" element={<Checkouts />} />
-
+      <Route path="/changepassword" element={<ChangePassword />} />
       {currentUser ? (
         <Route path="/myaccount" element={<Account />} />
       ) : (
@@ -52,8 +53,9 @@ function App() {
 
       {/* <Route path="/myaccount" element={<Account />} /> */}
       <Route path="/myorders/:id" element={<Orders />} />
+      <Route path="/searchproduct/:category" element={<SearchProduct />} />
+      <Route path="/wishlist" element={<WishList />} />
       <Route path="*" element={<Nomatch />} />
-      {/* <Route path="/vid" element={<TEst />} /> */}
     </Routes>
   );
 }

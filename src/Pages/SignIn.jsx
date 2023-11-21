@@ -92,12 +92,19 @@ const Video = styled.video`
   })}
 `;
 
+const Text = styled.p`
+  display: flex;
+  width: 100%;
+  justify-content: right;
+  padding-right: 50px;
+`;
+
 const Signin = () => {
   const [errors, setErrors] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
-  const { isFetching, error } = useSelector((state) => state.user);
+  const { isFetching, error, msg } = useSelector((state) => state.user);
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -110,7 +117,7 @@ const Signin = () => {
     console.log("after login");
     // window.location.reload();
   };
-  console.log(error);
+  console.log(error, msg);
   return (
     <Box>
       <Video playsInline autoPlay muted loop>
@@ -122,14 +129,23 @@ const Signin = () => {
           placeholder="enter username"
           onChange={(e) => {
             setUsername(e.target.value);
+            setErrors(false);
           }}
         ></Input>
         <Input
           placeholder="enter password"
+          type="password"
           onChange={(e) => {
             setPassword(e.target.value);
+            setErrors(false);
           }}
         ></Input>
+
+        <Text>
+          <Link to="/changepassword" style={{ textDecoration: "none" }}>
+            Forgot Password
+          </Link>
+        </Text>
 
         <Button
           sx={{
@@ -143,7 +159,17 @@ const Signin = () => {
         </Button>
 
         {errors && <Error>All fields are necessary</Error>}
-        {error && <Error> Something went wrong</Error>}
+        {/* {error && <Error> Something went wrong</Error>} */}
+        {error ? (
+          msg ? (
+            <Error>{msg}</Error>
+          ) : (
+            <Error>Something went wrong</Error>
+          )
+        ) : (
+          <></>
+        )}
+
         <Para>
           New user ?? <Link to="/signup">Sign Up</Link>
         </Para>

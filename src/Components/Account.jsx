@@ -79,7 +79,7 @@ const Text = styled.p`
 const Account = () => {
   const user = useSelector((state) => state.user.currentUser);
   console.log(user._id);
-  const userName = user.username.charAt(0).toUpperCase();
+  // const userName = user.username.charAt(0).toUpperCase();
   const userImage = user.image;
   const handleClick = () => {
     localStorage.removeItem("persist:root");

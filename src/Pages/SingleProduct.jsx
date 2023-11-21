@@ -11,7 +11,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 import { publicRequest, userRequest } from "../requestMethods";
 import { addProduct } from "../redux/cartRedux";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Product from "../Components/Product";
 
 const Box = styled.div`
@@ -118,40 +118,65 @@ const Image = styled.img`
   height: 90vh;
   object-fit: cover;
 `;
+
+const Outer = styled.div`
+  width: 100vw;
+`;
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+const Headings = styled.p`
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: "Times New Roman", Times, serif;
+  padding: 10px;
+`;
+
 const SingleProduct = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
   const [goto, setGoto] = useState(false);
   const [product, setProduct] = useState({});
   const [recProduct, setRecProduct] = useState([]);
-
+  const [category, setCategory] = useState();
   const [quantity, setQuantity] = useState(1);
   const [color, setColor] = useState("yellow");
   const [size, setSize] = useState("M");
   const dispatch = useDispatch();
+
+  const { products } = useSelector((state) => state.cart);
 
   useEffect(() => {
     const getProduct = async () => {
       try {
         const res = await userRequest.get(`/products/${id}`);
         setProduct(res.data);
+        setCategory(res.data.title);
       } catch (error) {
         if (error.response.status === 401) {
-          setGoto(true);
+          setGoto(true); //if user is not signed in so redirect to the sigin page
         }
       }
     };
     getProduct();
   }, [id]);
 
-  const getRecPro = async (arr) => {
-    const res = await publicRequest.get(`/products/?category=${arr[1]}`);
-    setRecProduct(res.data);
-    console.log(res.data);
-  };
-
-  ///for showing recommanded products
-  // getRecPro();
+  useEffect(() => {
+    // const getRecPro = async (arr) => {
+    //   const res = await publicRequest.get(
+    //     `/products/?category=${arr && arr[0]}`
+    //   );
+    //   setRecProduct(res.data);
+    // };
+    // getRecPro(pro);
+    const getRecPro = async () => {
+      const res = await publicRequest.get(`/products/?category=${category}`);
+      setRecProduct(res.data);
+    };
+    getRecPro();
+  }, [category]);
 
   const handleQuantity = (type) => {
     if (type === "inc") {
@@ -163,17 +188,23 @@ const SingleProduct = () => {
 
   const handleClick = () => {
     //update cart
-    dispatch(addProduct({ ...product, quantity, color, size }));
+    // dispatch(addProduct({ ...product, quantity, color, size }));
+    const promise = new Promise(
+      dispatch(addProduct({ ...product, quantity, color, size }))
+    );
+    promise.then(() => {
+      updateCart();
+    });
+  };
+
+  const updateCart = async () => {
+    console.log(products);
   };
 
   if (goto) {
     return <Navigate to="/signin" />;
   }
-  const show = () => {
-    let vara = [...product.categories];
-    console.log(vara);
-    getRecPro(vara);
-  };
+
   return (
     <Box>
       <Announcement />
@@ -216,10 +247,17 @@ const SingleProduct = () => {
           </Filter1>
         </Right>
       </Wrapper>
-      {recProduct?.map((items) => (
-        <Product item={items} />
-      ))}
-      <button onClick={show}>SHOW</button>
+
+      {recProduct && (
+        <Outer>
+          <Headings>Similiar Products:</Headings>
+          <Container>
+            {recProduct?.map((items) => (
+              <Product item={items} />
+            ))}
+          </Container>
+        </Outer>
+      )}
       <Newsletter />
       <Footer />
     </Box>

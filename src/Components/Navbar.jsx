@@ -7,12 +7,11 @@ import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import LoginOutlinedIcon from "@mui/icons-material/LoginOutlined";
 import AppRegistrationOutlinedIcon from "@mui/icons-material/AppRegistrationOutlined";
 import { Badge } from "@mui/material";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import { mobile } from "../responsive";
-import axios from "axios";
-import { publicRequest } from "../requestMethods";
-import Product from "./Product";
+// import { publicRequest } from "../requestMethods";
+import { searchProduct } from "../redux/apiCalls";
 
 const Container = styled.div`
   height: 40px;
@@ -104,8 +103,9 @@ const SerachBtnContainer = styled.button`
 
 const Navbar = () => {
   const [input, setInput] = useState("");
-  const [arr, setArr] = useState([]);
-
+  // const [data, setData] = useState();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const quantity = useSelector((state) => state.cart.quantity);
   const user = useSelector((state) => state.user.currentUser);
 
@@ -113,11 +113,11 @@ const Navbar = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(input);
-    const res = await publicRequest.get(`/products/?category=${input}`);
-    const data = res.data;
-    console.log(data);
-    setArr(data.map((items) => <Product item={items} />));
+    // const res = await publicRequest.get(`/products/?category=${input}`);
+    // const data = res.data;
+    // setData(await res.data);
+    searchProduct(dispatch, { input });
+    navigate(`/searchproduct/${input}`);
   };
 
   return (

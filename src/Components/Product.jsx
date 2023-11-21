@@ -3,6 +3,8 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ShoppingCartOutlinedIcon from "@mui/icons-material/ShoppingCartOutlined";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addWishlistProduct } from "../redux/userReducer";
 
 const Info = styled.div`
   opacity: 0;
@@ -50,7 +52,7 @@ const Image = styled.img`
   z-index: 2;
 `;
 
-const Icon = styled.div`
+const Icon = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -60,13 +62,21 @@ const Icon = styled.div`
   justify-content: center;
   margin: 10px;
   transition: all 0.5s ease;
+  cursor: pointer;
+  border: none;
   &:hover {
     background-color: #e9f5f5;
     transform: scale(1.1);
   }
 `;
 
-const Product = ({ item }) => {
+const Product = ({ item, wishlist }) => {
+  const dispatch = useDispatch();
+
+  const handleClick = (items) => {
+    dispatch(addWishlistProduct({ ...items }));
+  };
+
   return (
     <Container>
       <Circle />
@@ -80,7 +90,12 @@ const Product = ({ item }) => {
             <SearchOutlinedIcon />
           </Link>
         </Icon>
-        <Icon>
+        <Icon
+          disabled={wishlist ? true : false}
+          onClick={() => {
+            handleClick(item);
+          }}
+        >
           <FavoriteBorderOutlinedIcon />
         </Icon>
       </Info>

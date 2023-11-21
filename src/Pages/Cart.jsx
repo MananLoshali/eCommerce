@@ -162,8 +162,8 @@ const Button = styled.button`
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user.currentUser);
-  console.log(cart.products[0]);
-  console.log(cart.total);
+  const { wishlistProductQuantity } = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
   const handleClick = () => {
     createOrder();
@@ -205,7 +205,15 @@ const Cart = () => {
           </TopButton>
           <TopTexts>
             <TopText>Shopping Bag:({cart.quantity})</TopText>
-            <TopText>Your Wishlist (0)</TopText>
+            <Link
+              to="/wishlist"
+              style={{
+                textDecoration: "none",
+                color: "black",
+              }}
+            >
+              <TopText>Your Wishlist ({wishlistProductQuantity})</TopText>
+            </Link>
           </TopTexts>
           <TopButton type="filled" onClick={handleClick}>
             <Link
