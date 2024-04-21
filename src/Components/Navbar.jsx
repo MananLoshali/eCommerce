@@ -29,7 +29,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: space-between;
   padding: 0px 20px;
-  ${mobile({ padding: "0px", justifyContent: "space-between" })}
+  ${mobile({ padding: "21px 21px 21px 15px", justifyContent: "space-between" })}
 `;
 
 const Left = styled.div`
@@ -37,7 +37,7 @@ const Left = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  ${mobile({})}
+  ${mobile({ display: "none" })}
 `;
 
 const Middle = styled.div`
@@ -62,7 +62,6 @@ const TextContainer = styled.div`
   &:hover {
     scale: 1.2;
   }
-  ${mobile({})}
 `;
 const Text = styled.p`
   color: black;
@@ -88,7 +87,7 @@ const Search = styled.input`
   &:focus {
     outline: none;
   }
-  ${mobile({ padding: "0px", width: "20px" })}
+  ${mobile({ padding: "10px", width: "100px" })}
 `;
 const SearchContainer = styled.form`
   display: flex;
@@ -106,7 +105,7 @@ const Navbar = () => {
   // const [data, setData] = useState();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const quantity = useSelector((state) => state.cart.quantity);
+  const quantity = useSelector((state) => state.cart.totalQuantity);
   const user = useSelector((state) => state.user.currentUser);
 
   // const userName =  user.username.charAt(0).toUpperCase();

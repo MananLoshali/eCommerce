@@ -23,18 +23,18 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      {newUser ? (
+      <Route path="/" exact element={<Home />} />
+      {Boolean(newUser) ? (
         <Route path="/signup" element={<Navigate to="/signin" />} />
       ) : (
         <Route path="/signup" element={<SignUp />} />
       )}
-      {currentUser ? (
+      {Boolean(currentUser) ? (
         <Route path="/signin" element={<Navigate to="/" />} />
       ) : (
         <Route path="/signin" element={<SignIn />} />
       )}
-      {currentUser ? (
+      {Boolean(currentUser) ? (
         <Route path="/signup" element={<Navigate to="/" />} />
       ) : (
         <Route path="/signup" element={<SignUp />} />

@@ -4,18 +4,23 @@ import Navbar from "../Components/Navbar";
 import Announcement from "../Components/Announcement";
 import Footer from "../Components/Footer";
 import styled from "styled-components";
+import StripeCheckout from "react-stripe-checkout";
 
 import { mobile } from "../responsive";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { clearCart } from "../redux/cartRedux";
 import { userRequest } from "../requestMethods";
 import Newsletter from "../Components/Newsletter";
-
+import { useEffect, useState } from "react";
+import { getCart } from "../redux/apiCalls";
+const KEY =
+  "pk_test_51P5DjySEzKBXhG3gR8EutNY2VgYGUJG4w1G1wQ8DfruLIQ3YKBjxT8ggBzVtnR3pK0fx0DJSGqRcSYyR7JcjnJHM00nfo5J7Gz";
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   padding: 20px;
+
   ${mobile({ padding: "10px" })}
 `;
 
@@ -58,6 +63,9 @@ const Bottom = styled.div`
 
 const Info = styled.div`
   flex: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 `;
 
 const Product = styled.div`
@@ -80,6 +88,7 @@ const Details = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  gap: 10px;
 `;
 
 const ProductName = styled.span``;
@@ -157,17 +166,36 @@ const Button = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  border: none;
+`;
+const Loading = styled.div`
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  opacity: 1;
 `;
 
 const Cart = () => {
-  const cart = useSelector((state) => state.cart);
-  const user = useSelector((state) => state.user.currentUser);
-  const { wishlistProductQuantity } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.currentUser);
+  const cart = useSelector((state) => state.cart);
+  const { wishlistProductQuantity } = useSelector((state) => state.user);
+  const [stripeToken, setStripeToken] = useState(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    getCart(dispatch, user._id);
+  }, []);
+  console.log(cart, "cart");
+
   const handleClick = () => {
     createOrder();
     dispatch(clearCart());
+  };
+  const onToken = (token) => {
+    setStripeToken(token);
+    console.log(token);
   };
   const createOrder = async () => {
     try {
@@ -185,6 +213,32 @@ const Cart = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    const makeRequest = async () => {
+      try {
+        const orderedProduct = cart.products.map((item) => ({
+          productId: item._id,
+          quantity: item.quantity,
+          color: item.colors,
+          size: item.size,
+          amount: item.price,
+        }));
+        const res = await userRequest.post("/checkout/payment", {
+          tokenId: stripeToken.id,
+          amount: cart.total * 100,
+        });
+        dispatch(clearCart());
+        navigate("/checkout", {
+          stripeData: res.data,
+          products: orderedProduct,
+        });
+      } catch (error) {
+        console.log(error, "cart error");
+      }
+    };
+    stripeToken && makeRequest();
+  }, [stripeToken, navigate]);
   return (
     <Container>
       <Navbar />
@@ -204,7 +258,7 @@ const Cart = () => {
             </Link>
           </TopButton>
           <TopTexts>
-            <TopText>Shopping Bag:({cart.quantity})</TopText>
+            <TopText>Shopping Bag:({cart.totalQuantity})</TopText>
             <Link
               to="/wishlist"
               style={{
@@ -215,7 +269,23 @@ const Cart = () => {
               <TopText>Your Wishlist ({wishlistProductQuantity})</TopText>
             </Link>
           </TopTexts>
-          <TopButton type="filled" onClick={handleClick}>
+          {stripeToken ? (
+            <Loading> Processing. Please wait....</Loading>
+          ) : (
+            <StripeCheckout
+              name="Dholakpur"
+              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              billingAddress
+              shippingAddress
+              description={`Your total is $${cart.total}`}
+              amount={cart.total * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button color={"yellow"}> CHECKOUT NOW</Button>
+            </StripeCheckout>
+          )}
+          {/* <TopButton type="filled" onClick={handleClick}>
             <Link
               to="/checkout"
               style={{
@@ -225,7 +295,7 @@ const Cart = () => {
             >
               CHECKOUT NOW
             </Link>
-          </TopButton>
+          </TopButton> */}
         </Top>
         <Bottom>
           <Info>
@@ -253,7 +323,7 @@ const Cart = () => {
                     {/* <RemoveIcon /> */}
                   </ProductAmountContainer>
                   <ProductPrice>
-                    $ {product.price * product.quantity}
+                    $ {product.amount * product.quantity}
                   </ProductPrice>
                 </PriceDetail>
               </Product>

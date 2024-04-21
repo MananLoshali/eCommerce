@@ -25,7 +25,7 @@ const WishList = () => {
 
   return (
     <Outer>
-      <Heading>Wishlist Products</Heading>
+      <Heading>Wishlist Products:</Heading>
       <Container>
         {wishlistProduct.map((item) => (
           <Product item={item} wishlist="true" />
